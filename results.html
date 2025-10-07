@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AutoScreen — Ranking Results</title>
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" />
+</head>
+<body class="page-bg">
+  <header class="header-bar">
+    <div class="brand small">
+      <div class="logo-mark">AS</div>
+      <div>
+        <div class="brand-title">AutoScreen.AI</div>
+        <div class="brand-sub">Candidate Ranking</div>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <a href="{{ url_for('index') }}" class="btn ghost">← Back</a>
+      <a href="{{ url_for('download') }}" class="btn primary">Download CSV</a>
+    </div>
+  </header>
+
+  <main class="results-container">
+    <section class="job-summary card">
+      <h2>Job Description Used</h2>
+      <pre class="jd-box">{{ jd|e }}</pre>
+    </section>
+
+    <section class="controls card">
+      <div class="control-row">
+        <input id="searchInput" placeholder="Search by name, email or skill (type to filter)" />
+        <select id="sortSelect" title="Sort">
+          <option value="score_desc">Sort: Score (high → low)</option>
+          <option value="score_asc">Sort: Score (low → high)</option>
+          <option value="name_asc">Sort: Name (A → Z)</option>
+          <option value="name_desc">Sort: Name (Z → A)</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="ranking-table card" id="rankingTable">
+      <div class="table-header">
+        <div class="col rank-col">Rank</div>
+        <div class="col name-col">Candidate</div>
+        <div class="col contact-col">Email / Phone</div>
+        <div class="col score-col">Score</div>
+        <div class="col skills-col">Skills Matched</div>
+        <div class="col action-col">Action</div>
+      </div>
+
+      <div id="rows">
+        {% for c in ranked %}
+        <div class="row-wrap" data-score="{{ c.score }}" data-name="{{ (c.name or c.basename) | e }}" data-skills="{{ (c.skills | join(',') ) | e }}">
+          <div class="table-row">
+            <div class="col rank-col"><strong>#{{ c.rank }}</strong></div>
+            <div class="col name-col">
+              <div class="cand-name">{{ c.name or c.basename }}</div>
+              <div class="muted small">{{ c.basename }}</div>
+            </div>
+            <div class="col contact-col">
+              <div>{{ c.email or '—' }}</div>
+              <div class="muted small">{{ c.phone or '—' }}</div>
+            </div>
+            <div class="col score-col"><span class="score-badge">{{ c.score }}</span></div>
+            <div class="col skills-col">
+              {% if c.skills %}
+                {% for s in c.skills %}
+                  <span class="skill-tag">{{ s }}</span>
+                {% endfor %}
+              {% else %}
+                <span class="muted">No matched skills</span>
+              {% endif %}
+            </div>
+            <div class="col action-col">
+              <button class="btn ghost small toggle-snippet">View</button>
+              <a class="btn primary small" href="{{ url_for('view_resume') }}?path={{ c.file }}">Full Resume</a>
+            </div>
+          </div>
+
+          <div class="snippet-box hidden">
+            <div class="snippet-inner">
+              <strong>Resume snippet</strong>
+              <p>{{ c.snippet }}</p>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">© 2025 AutoScreen.AI</footer>
+
+  <script src="{{ url_for('static', filename='js/results.js') }}"></script>
+</body>
+</html>

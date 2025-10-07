@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AutoScreen — Upload Resumes</title>
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" />
+</head>
+<body class="page-bg">
+  <header class="header-bar">
+    <div class="brand">
+      <div class="logo-mark">AS</div>
+      <div>
+        <div class="brand-title">AutoScreen.AI</div>
+        <div class="brand-sub">Automated Resume Screening</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card upload-card">
+      <h2>Paste Job Description & Upload Resumes</h2>
+      <form id="uploadForm" action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
+        <label class="label">Job Description</label>
+        <textarea name="jd" id="jd" placeholder="Paste job description here (required)" required></textarea>
+
+        <label class="label">Upload Resumes (multiple)</label>
+        <div id="dropzone" class="dropzone">
+          <input id="resumes" name="resumes" type="file" accept=".pdf,.docx,.txt,.html,.htm" multiple />
+          <div class="dropzone-content">
+            <div class="drop-icon">📁</div>
+            <div class="drop-text">Drag & drop resumes, or click to browse</div>
+            <div id="fileList" class="file-list">No files selected</div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn primary">Rank Resumes</button>
+          <button type="reset" class="btn ghost" id="resetBtn">Reset</button>
+        </div>
+      </form>
+    </section>
+
+    <aside class="card tips-card">
+      <h3>Tips for best rankings</h3>
+      <ul class="muted">
+        <li>Provide a clear job description with required skills and seniority level.</li>
+        <li>Use PDF or DOCX resumes when possible for better text extraction.</li>
+        <li>Upload multiple resumes (select several with Ctrl/Cmd) to compare results.</li>
+      </ul>
+    </aside>
+  </main>
+
+  <footer class="footer">
+    © 2025 AutoScreen.AI — Built with Flask · Python · NLP
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+</body>
+</html>
